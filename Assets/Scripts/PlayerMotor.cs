@@ -7,6 +7,7 @@ public class PlayerMotor : MonoBehaviour
     private CharacterController controller;
     private Vector3 playerVelocity;
     private bool isGrounded;
+    private bool isSprinting;
     public float speed = 5f;
     public float gravity = -9.8f;
     public float jumpHeight = 3f;
@@ -38,6 +39,18 @@ public class PlayerMotor : MonoBehaviour
         if (isGrounded) {
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -3.0f * gravity);
         }
+    }
+
+    public void Crouch() {
+
+    }
+
+    public void Sprint() {
+        isSprinting = !isSprinting;
+        if (isSprinting)
+            speed = 6;
+        else
+            speed = 3;
     }
 
 }
