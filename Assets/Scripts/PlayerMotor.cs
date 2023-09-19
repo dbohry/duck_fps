@@ -6,8 +6,13 @@ public class PlayerMotor : MonoBehaviour
 {
     private CharacterController controller;
     private Vector3 playerVelocity;
+    
     private bool isGrounded;
     private bool isSprinting;
+    private bool isCrouching;
+    private bool lerpCrouch;
+    private float crouchTimer = 0f;
+
     public float speed = 5f;
     public float gravity = -9.8f;
     public float jumpHeight = 3f;
@@ -21,6 +26,20 @@ public class PlayerMotor : MonoBehaviour
     void Update()
     {
         isGrounded = controller.isGrounded;
+        if (lerpCrouch) {
+            crouchTimer += Time.deltaTime;
+            float p = crouchTimer / 1;
+            p *= p;
+            if (isCrouching)
+                controller.height = Mathf.Lerp(controller.height, 1, p);
+            else
+                controller.height = Mathf.Lerp(controller.height, 2, p);
+
+            if (p > 1) {
+                lerpCrouch = false;
+                crouchTimer = 0f;
+            }
+        }
     }
 
     public void ProcessMove(Vector2 input) {
@@ -42,7 +61,9 @@ public class PlayerMotor : MonoBehaviour
     }
 
     public void Crouch() {
-
+        isCrouching = !isCrouching;
+        crouchTimer = 0;
+        lerpCrouch = true;
     }
 
     public void Sprint() {
